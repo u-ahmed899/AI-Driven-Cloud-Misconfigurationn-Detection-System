@@ -2,7 +2,7 @@
 Cloud Misconfiguration Detection system is an AI(CNNs) powered model which takes in the misconfigured files from the user and returns the areas where the file is misconfigured and also suggests actions to counter that.
 
 1. Clone the repository:
-   git clone https://github.com/yourusername/cloud-misconfig-detection.git
+   git clone  https://github.com/u-ahmed899/AI-Driven-Cloud-Misconfigurationn-Detection-System/
    cd cloud-misconfig-detection
 
 2. Install dependencies:
