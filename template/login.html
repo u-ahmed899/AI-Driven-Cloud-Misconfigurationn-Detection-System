@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #000235;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            flex-direction: column; /* Ensure the layout flows vertically */
+        }
+
+        .circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        .top-left {
+            top: -150px;
+            left: -150px;
+            background-color: #AABBDD;
+        }
+
+        .bottom-right {
+            bottom: -150px;
+            right: -150px;
+            background-color: #ABD9D9;
+        }
+
+        /* CMD logo styling */
+        .logo {
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Login Box styling */
+        .login-box {
+            background-color: #1E1E5D; /* Same as the upload box */
+            width: 500px;  /* Width of the login box */
+            padding: 60px; /* Padding for better spacing */
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1;
+        }
+
+        .login-box h2 {
+            color: #FFFFFF;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Input fields for username and password */
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            background-color: #7A3E9D; /* Same as 'No file chosen' text color */
+            color: #FFFFFF; /* Text color */
+        }
+
+        .input-field::placeholder {
+            color: #FFFFFF; /* Placeholder color */
+        }
+
+        /* Buttons */
+        .button {
+            background-color: #5567AA;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 20px;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .button:hover {
+            background-color: #7A3E9D; /* Hover effect */
+        }
+
+        .button.secondary {
+            background-color: #7A3E9D;
+        }
+
+        .button.secondary:hover {
+            background-color: #5567AA;
+        }
+
+        .center-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Blurry Circles -->
+    <div class="circle top-left"></div>
+    <div class="circle bottom-right"></div>
+
+    <!-- CMD Logo -->
+    <div class="logo">CMD</div>
+
+    <!-- Login Box -->
+    <div class="login-box">
+        <h2>Login</h2>
+        
+        <!-- Input fields for username and password -->
+        <input type="text" class="input-field" placeholder="Username" id="username">
+        <input type="password" class="input-field" placeholder="Password" id="password">
+        
+        <!-- Buttons for login and admin login -->
+        <div class="center-buttons">
+            <button class="button" onclick="login()">LOGIN</button>
+            <button class="button secondary" onclick="adminLogin()">ADMIN LOGIN</button>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username && password) {
+                // Redirect to fyp2.html on the same page
+                window.location.href = '/upload';
+            } else {
+                alert('Please enter both username and password');
+            }
+        }
+
+        function adminLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username && password) 
+            {
+                // Redirect to admin.html on the same page
+                window.location.href = '/admin';
+            } else 
+            {
+                alert('Please enter both username and password');
+            }    
+        }
+    </script>
+</body>
+</html>
+
+
+
+

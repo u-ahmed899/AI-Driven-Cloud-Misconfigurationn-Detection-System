@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMD Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #000235;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        nav {
+            width: 100%;
+            height: 70px;
+            background-color: #000235;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-bottom: 2px solid #7A3E9D;
+            z-index: 1;
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* About Button Styles */
+        .menu-item button {
+            background-color: transparent;
+            color: white;
+            font-size: 16px;
+            font-family: 'Outfit', sans-serif;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-item button:hover {
+            background-color: #7A3E9D;
+            border-radius: 10px;
+        }
+
+        .circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        .top-left {
+            top: -200px; /* Adjusted to avoid overlapping the logo */
+            left: -200px;
+            background-color: #AABBDD;
+        }
+
+        .bottom-right {
+            bottom: -150px;
+            right: -150px;
+            background-color: #ABD9D9;
+        }
+
+        .button {
+            background-color: #5567AA;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 20px;
+            width: 200px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-transform: uppercase; /* Capitalizes text */
+            padding-left: 10px; /* Adds padding to the left */
+            padding-right: 10px; /* Adds padding to the right */
+        }
+
+        .button:hover {
+            background-color: #7A3E9D;
+        }
+
+        .center-buttons {
+            display: flex;
+            gap: 20px; /* Space between buttons */
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            margin-top: 100px; /* Centers buttons on the page */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">CMD</div>
+        <div class="menu-item">
+            <button onclick="window.open('/about', '_blank')">About</button>
+        </div>
+    </nav>
+
+    <!-- Background Blurry Circles -->
+    <div class="circle top-left"></div>
+    <div class="circle bottom-right"></div>
+
+    <!-- Centered Buttons -->
+    <div class="center-buttons">
+        <button class="button" onclick="window.location.href='/upload'">Manage Model</button>
+        <button class="button" onclick="window.location.href='/history'">Review Upload History</button>
+    </div>
+</body>
+</html>
+
+
+
+
+
