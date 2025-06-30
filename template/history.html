@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload History</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #000235;
+            color: white;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .circle {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        .top-left {
+            top: -150px;
+            left: -150px;
+            background-color: #AABBDD;
+        }
+
+        .bottom-right {
+            bottom: -150px;
+            right: -150px;
+            background-color: #ABD9D9;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        h1 {
+            color: #7A3E9D;
+            font-size: 2.5rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #1E1E5D;
+            border-radius: 30px;
+            padding: 8px 15px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            outline: none;
+            width: 200px;
+        }
+
+        .search-box i {
+            color: #7A3E9D;
+        }
+
+        .filter-btn {
+            background-color: #1E1E5D;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .filter-btn:hover {
+            background-color: #2E2E6D;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #1E1E5D;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-table th, .history-table td {
+            padding: 18px 15px;
+            text-align: left;
+            border-bottom: 1px solid #7A3E9D;
+        }
+
+        .history-table th {
+            background-color: #7A3E9D;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover {
+            background-color: #2E2E6D;
+        }
+
+        .view-btn {
+            background-color: #5567AA;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .view-btn:hover {
+            background-color: #7A3E9D;
+            transform: translateY(-2px);
+        }
+
+        .error-count {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .error-0 {
+            background-color: #4CAF50;
+        }
+
+        .error-1 {
+            background-color: #FFC107;
+            color: #333;
+        }
+
+        .error-2 {
+            background-color: #FF9800;
+        }
+
+        .error-3 {
+            background-color: #F44336;
+        }
+
+        .back-btn {
+            background-color: #5567AA;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            margin-top: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            background-color: #7A3E9D;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #7A3E9D;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .file-icon {
+            margin-right: 10px;
+            color: #ABD9D9;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #AABBDD;
+            font-style: italic;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .page-btn {
+            background-color: #1E1E5D;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .page-btn:hover, .page-btn.active {
+            background-color: #7A3E9D;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-complete {
+            background-color: #4CAF50;
+        }
+        
+        .status-processing {
+            background-color: #FFC107;
+        }
+        
+        .status-failed {
+            background-color: #F44336;
+        }
+        
+        .info-text {
+            color: #AABBDD;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .controls {
+                width: 100%;
+            }
+            
+            .search-box {
+                flex-grow: 1;
+            }
+            
+            .history-table {
+                font-size: 0.9rem;
+            }
+            
+            .history-table th, 
+            .history-table td {
+                padding: 12px 10px;
+            }
+            
+            .view-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="circle top-left"></div>
+    <div class="circle bottom-right"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-history"></i> Upload History</h1>
+            <div class="controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search files...">
+                </div>
+                <button class="filter-btn">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </div>
+        </div>
+        
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Upload Time</th>
+                    <th>Status</th>
+                    <th>Errors</th>
+                    <th>pdf_url</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="historyTableBody">
+                <tr>
+                    <td colspan="6" style="text-align: center;">
+                        <div class="loading"></div> Loading history...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be added by JavaScript -->
+        </div>
+        
+        <p class="info-text">Showing 10 most recent uploads. Use pagination to view older entries.</p>
+
+        <button class="back-btn" onclick="window.location.href='/upload'">
+            <i class="fas fa-arrow-left"></i> Back to Upload
+        </button>
+    </div>
+
+    <script>
+        // Simulated database data
+        const mockDatabase = [
+            { id: 1, filename: "financial_report_2023.pdf", upload_time: "2025-06-30 14:30:22", status: "complete", Errors: 0, pdf_url: "#" },
+            { id: 2, filename: "quarterly_results_Q2.xlsx", upload_time: "2025-06-29 11:15:45", status: "complete", Errors: 2, pdf_url: "#" },
+            { id: 3, filename: "user_data_backup.csv", upload_time: "2025-06-28 09:42:18", status: "complete", Errors: 1, pdf_url: "#" },
+            { id: 4, filename: "project_documentation.docx", upload_time: "2025-06-27 16:20:33", status: "complete", Errors: 0, pdf_url: "#" },
+            { id: 5, filename: "marketing_analysis.pdf", upload_time: "2025-06-26 13:55:07", status: "complete", Errors: 3, pdf_url: "#" },
+            { id: 6, filename: "client_presentation.pptx", upload_time: "2025-06-25 10:30:59", status: "processing", Errors: 0, pdf_url: "#" },
+            { id: 7, filename: "database_schema.sql", upload_time: "2025-06-24 17:45:21", status: "failed", Errors: 5, pdf_url: "#" },
+            { id: 8, filename: "expense_report.xlsx", upload_time: "2025-06-23 08:12:37", status: "complete", Errors: 0, pdf_url: "#" },
+            { id: 9, filename: "employee_handbook.pdf", upload_time: "2025-06-22 15:30:44", status: "complete", Errors: 1, pdf_url: "#" },
+            { id: 10, filename: "system_logs.txt", upload_time: "2025-06-21 12:05:19", status: "complete", Errors: 4, pdf_url: "#" },
+            { id: 11, filename: "security_audit.pdf", upload_time: "2025-06-20 09:18:52", status: "complete", Errors: 0, pdf_url: "#" },
+            { id: 12, filename: "budget_planning.xlsx", upload_time: "2025-06-19 14:40:27", status: "complete", Errors: 2, pdf_url: "#" },
+            { id: 13, filename: "meeting_minutes.docx", upload_time: "2025-06-18 11:25:33", status: "complete", Errors: 0, pdf_url: "#" },
+            { id: 14, filename: "network_diagram.png", upload_time: "2025-06-17 16:15:08", status: "processing", Errors: 0, pdf_url: "#" },
+            { id: 15, filename: "code_review.txt", upload_time: "2025-06-16 10:50:42", status: "failed", Errors: 7, pdf_url: "#" }
+        ];
+        
+        // Simulate API delay
+        setTimeout(() => {
+            populateHistoryTable(mockDatabase.slice(0, 10));
+            setupPagination();
+        }, 1500);
+        
+        // Populate the history table
+        function populateHistoryTable(data) {
+            const tableBody = document.getElementById('historyTableBody');
+            
+            if(data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="no-results">No upload history found</td></tr>';
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Determine status indicator
+                let statusIndicator, statusText;
+                if(item.status === 'complete') {
+                    statusIndicator = '<span class="status-indicator status-complete"></span> Complete';
+                } else if(item.status === 'processing') {
+                    statusIndicator = '<span class="status-indicator status-processing"></span> Processing';
+                } else {
+                    statusIndicator = '<span class="status-indicator status-failed"></span> Failed';
+                }
+                
+                // Determine error count class
+                const errorClass = item.Errors > 3 ? 'error-3' : `error-${item.error_count}`;
+                
+                row.innerHTML = `
+                    <td><i class="fas fa-file-alt file-icon"></i> ${item.filename}</td>
+                    <td>${formatDateTime(item.Upload_Time)}</td>
+                    <td>${statusIndicator}</td>
+                    <td><span class="Errors ${errorClass}">${item.Errors}</span></td>
+                    <td><button class="view-btn" onclick="viewReport(${item.id})"><i class="fas fa-eye"></i> View Report</button></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Format date and time for display
+        function formatDateTime(datetime) {
+            const date = new Date(datetime);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        
+        // Setup pagination
+        function setupPagination() {
+            const itemsPerPage = 10;
+            const totalPages = Math.ceil(mockDatabase.length / itemsPerPage);
+            const paginationDiv = document.getElementById('pagination');
+            
+            paginationDiv.innerHTML = '';
+            
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.onclick = () => changePage(currentPage > 1 ? currentPage - 1 : 1);
+            paginationDiv.appendChild(prevBtn);
+            
+            // Page buttons
+            for(let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = 'page-btn';
+                if(i === 1) pageBtn.classList.add('active');
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => changePage(i);
+                paginationDiv.appendChild(pageBtn);
+            }
+            
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.onclick = () => changePage(currentPage < totalPages ? currentPage + 1 : totalPages);
+            paginationDiv.appendChild(nextBtn);
+            
+            // Set current page
+            window.currentPage = 1;
+        }
+        
+        // Change page function
+        function changePage(page) {
+            const itemsPerPage = 10;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = mockDatabase.slice(startIndex, endIndex);
+            
+            populateHistoryTable(pageData);
+            
+            // Update active page
+            document.querySelectorAll('.page-btn').forEach((btn, index) => {
+                if(index > 0 && index <= Math.ceil(mockDatabase.length / itemsPerPage)) {
+                    btn.classList.remove('active');
+                    if(parseInt(btn.textContent) === page) {
+                        btn.classList.add('active');
+                    }
+                }
+            });
+            
+            window.currentPage = page;
+        }
+        
+        // View report function
+        function viewReport(id) {
+            const item = mockDatabase.find(i => i.id === id);
+            if(item) {
+                if(item.status === 'complete') {
+                    // In a real app, this would open the PDF
+                    alert(`Opening report for: ${item.filename}`);
+                } else if(item.status === 'processing') {
+                    alert('Report is still processing. Please try again later.');
+                } else {
+                    alert('Report generation failed. Please check the error details.');
+                }
+            }
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if(searchTerm === '') {
+                changePage(currentPage);
+                return;
+            }
+            
+            const filteredData = mockDatabase.filter(item => 
+                item.filename.toLowerCase().includes(searchTerm)
+            );
+            
+            populateHistoryTable(filteredData.slice(0, 10));
+            
+            // Update pagination for search results
+            const paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
+            
+            if(filteredData.length === 0) {
+                return;
+            }
+            
+            const totalPages = Math.ceil(filteredData.length / 10);
+            
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.onclick = () => changeSearchPage(currentSearchPage > 1 ? currentSearchPage - 1 : 1, filteredData);
+            paginationDiv.appendChild(prevBtn);
+            
+            // Page buttons
+            for(let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = 'page-btn';
+                if(i === 1) pageBtn.classList.add('active');
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => changeSearchPage(i, filteredData);
+                paginationDiv.appendChild(pageBtn);
+            }
+            
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.onclick = () => changeSearchPage(currentSearchPage < totalPages ? currentSearchPage + 1 : totalPages, filteredData);
+            paginationDiv.appendChild(nextBtn);
+            
+            window.currentSearchPage = 1;
+        });
+        
+        // Change page for search results
+        function changeSearchPage(page, data) {
+            const itemsPerPage = 10;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = data.slice(startIndex, endIndex);
+            
+            populateHistoryTable(pageData);
+            
+            // Update active page
+            document.querySelectorAll('.page-btn').forEach((btn, index) => {
+                if(index > 0 && index <= Math.ceil(data.length / itemsPerPage) {
+                    btn.classList.remove('active');
+                    if(parseInt(btn.textContent) === page) {
+                        btn.classList.add('active');
+                    }
+                }
+            });
+            
+            window.currentSearchPage = page;
+        }
+    </script>
+</body>
+</html>
